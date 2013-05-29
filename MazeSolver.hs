@@ -7,22 +7,28 @@ maybeAppend val (Just others) = Just (val : others)
 
 getPathDriver :: Cell -> Cell -> [Cell] -> Maze -> Maybe [Cell]
 getPathDriver current end seen (Maze maxX maxY mazeMap) 
-     | current == end                                                       = Just [current]
-     | isWall                                                               = Nothing
-     | currX - 1 >= 0   && notSeen (currX - 1, currY) && wResult /= Nothing = maybeAppend current wResult
-     | currY - 1 >= 0   && notSeen (currX, currY - 1) && nResult /= Nothing = maybeAppend current nResult
-     | currX + 1 < maxX && notSeen (currX + 1, currY) && eResult /= Nothing = maybeAppend current eResult
-     | currY + 1 < maxY && notSeen (currX, currY + 1) && sResult /= Nothing = maybeAppend current sResult
-     | otherwise                                                            = Nothing
+     | current == end                                          = Just [current]
+     | isWall                                                  = Nothing
+     | currX - 1 >= 0   && notSeen west  && wResult /= Nothing = maybeAppend current wResult
+     | currY - 1 >= 0   && notSeen north && nResult /= Nothing = maybeAppend current nResult
+     | currX + 1 < maxX && notSeen east  && eResult /= Nothing = maybeAppend current eResult
+     | currY + 1 < maxY && notSeen south && sResult /= Nothing = maybeAppend current sResult
+     | otherwise                                               = Nothing
      where notSeen :: Cell -> Bool
            notSeen cell = not (elem cell seen)
-           currX   = fst current
-           currY   = snd current
-           isWall  = ((mazeMap !! currY ) !! currX ) 
-           wResult = getPathDriver (currX - 1, currY) end (current:seen) (Maze maxX maxY mazeMap)
-           nResult = getPathDriver (currX, currY - 1) end (current:seen) (Maze maxX maxY mazeMap)
-           eResult = getPathDriver (currX + 1, currY) end (current:seen) (Maze maxX maxY mazeMap)
-           sResult = getPathDriver (currX, currY + 1) end (current:seen) (Maze maxX maxY mazeMap)
+           currX    = fst current
+           currY    = snd current
+           isWall   = ((mazeMap !! currY ) !! currX ) 
+           west     = (currX - 1, currY)
+           north    = (currX, currY - 1)
+           east     = (currX + 1, currY)
+           south    = (currX, currY + 1)
+           origMaze = (Maze maxX maxY mazeMap)
+           newSeen  = current:seen
+           wResult  = getPathDriver west  end newSeen origMaze
+           nResult  = getPathDriver north end newSeen origMaze 
+           eResult  = getPathDriver east  end newSeen origMaze 
+           sResult  = getPathDriver south end newSeen origMaze
 
 getPath :: Cell -> Cell -> Maze -> Maybe [Cell]
 getPath start end maze = getPathDriver start end [] maze
