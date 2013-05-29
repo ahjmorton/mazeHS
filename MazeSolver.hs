@@ -44,7 +44,6 @@ formatRow row path start end mazeData =
        where zipPos = zip [0,1..] mazeData
 
 formatOutputDriver :: [Cell] -> Cell -> Cell -> [[Bool]] -> [String]
-formatOutputDriver _ _ _ _ [] = []
 formatOutputDriver path start end mazeData = 
        map (\x -> formatRow (fst x) path start end (snd x)) zipPos
        where zipPos = zip [0,1..] mazeData
