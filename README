@@ -1,0 +1,27 @@
+Simple Haskell maze solver.
+
+Format is :
+
+<maze width> <maze heigh> 
+<starting y> <starting x>
+<end y> <end x>
+<maze content with walls being 1s seperated by a space>
+
+E.g.
+
+5 5
+1 1
+3 3
+1 1 1 1 1
+1 0 1 0 1
+1 0 1 0 1
+1 0 0 0 1
+1 1 1 1 1
+
+Would print
+OUTPUT:
+# # # # #
+# S #   #
+# X #   #
+# X X E #
+# # # # #
